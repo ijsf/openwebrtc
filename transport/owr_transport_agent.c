@@ -2305,6 +2305,8 @@ static void on_new_jitterbuffer(G_GNUC_UNUSED GstElement *rtpbin, GstElement *ji
     g_return_if_fail(OWR_IS_TRANSPORT_AGENT(transport_agent));
     media_session = OWR_MEDIA_SESSION(get_session(transport_agent, session_id));
     g_return_if_fail(OWR_IS_MEDIA_SESSION(media_session));
+    
+    g_object_set (jitterbuffer, "drop-on-latency", TRUE, NULL);
 
     if (_owr_media_session_want_receive_rtx(media_session))
         g_object_set(jitterbuffer, "do-retransmission", TRUE, NULL);
