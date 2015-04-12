@@ -448,10 +448,12 @@ GstElement * _owr_payload_create_encoder(OwrPayload *payload)
 #if (defined(__APPLE__) && TARGET_OS_IPHONE && !TARGET_IPHONE_SIMULATOR) || defined(__ANDROID__)
         /*
          * complexity: 5 (webrtc.org default for mobile)
+         * audio-type: voice (OPUS_APPLICATION_VOIP)
          */
         g_object_set(encoder,
             "complexity", 5,
             NULL);
+        gst_util_set_object_arg (G_OBJECT(encoder), "audio-type", "voice");
 #endif
         break;
         
