@@ -438,6 +438,23 @@ GstElement * _owr_payload_create_encoder(OwrPayload *payload)
         g_object_bind_property(payload, "bitrate", encoder, "target-bitrate", G_BINDING_SYNC_CREATE);
         g_object_set(payload, "bitrate", evaluate_bitrate_from_payload(payload), NULL);
         break;
+        
+    case OWR_CODEC_TYPE_OPUS:
+        element_name = g_strdup_printf("encoder_%s_%u", OwrCodecTypeEncoderElementName[payload->priv->codec_type], get_unique_id());
+        encoder = gst_element_factory_make(OwrCodecTypeEncoderElementName[payload->priv->codec_type], element_name);
+        g_free(element_name);
+        g_return_val_if_fail(encoder, NULL);
+        
+#if (defined(__APPLE__) && TARGET_OS_IPHONE && !TARGET_IPHONE_SIMULATOR) || defined(__ANDROID__)
+        /*
+         * complexity: 5 (webrtc.org default for mobile)
+         */
+        g_object_set(encoder,
+            "complexity", 5,
+            NULL);
+#endif
+        break;
+        
     default:
         element_name = g_strdup_printf("encoder_%s_%u", OwrCodecTypeEncoderElementName[payload->priv->codec_type], get_unique_id());
         encoder = gst_element_factory_make(OwrCodecTypeEncoderElementName[payload->priv->codec_type], element_name);
